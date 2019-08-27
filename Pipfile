@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dataset = "*"
+gunicorn = "*"
+healthcheck = "*"
+pluginbase = "*"
+psycopg2-binary = "*"
+requests = "*"
+structlog = "*"
+Flask = "*"
+prometheus_client = "*"
+PyYAML = "*"
+
+[dev-packages]
+pylint = "*"
+yapf = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-datadir = "*"
+pytest-flask = "*"
+tox = "*"
+tox-docker = "*"

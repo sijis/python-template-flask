@@ -1,0 +1,15 @@
+---
+production:
+  DEBUG: False
+
+development:
+  DEBUG: True
+  DB:
+    URI: "postgresql://postgres:mysecretpassword@localhost:$PORT/postgres"
+    OPTIONS:
+      pool_recycle: 2
+
+testing:
+  DEBUG: True
+  DB:
+    URI: "sqlite:///:memory:"
