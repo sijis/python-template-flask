@@ -10,11 +10,15 @@ class PluginManager:
     Args:
         resource (str): Path of plugin directory.
     """
-    def __init__(self, resource):
+    def __init__(self, resource, search_path=None):
+        all_paths = []
         path = pathlib.Path(__file__).parent.resolve()
         path = path / resource
+        all_paths.append(str(path))
 
-        all_paths = [str(path)]
+        if search_path:
+            all_paths.extend(search_path)
+
         self.paths = all_paths
 
         plugin_base = PluginBase(package='python_template_flask.plugins')
@@ -35,19 +39,19 @@ class PluginManager:
         return loaded_plugin
 
 
-def get_plugin(plugin_dir, plugin_name):
+def get_plugin(plugin_dir, plugin_name, extra_plugins=None):
     """Wrapper around PluginManager
 
     Args:
         plugin_dir (str): Path of plugin directory.
         name (str): The name of the plugin.
     """
-    manager = PluginManager(plugin_dir)
+    manager = PluginManager(resource=plugin_dir, search_path=extra_plugins)
     plugin = manager.load(plugin_name)
     return plugin
 
 
-def get_plugins(plugin_dir, prefix=None):
+def get_plugins(plugin_dir, prefix=None, extra_plugins=None):
     """Get plugins starting with a prefix
 
     Args:
@@ -56,7 +60,7 @@ def get_plugins(plugin_dir, prefix=None):
     """
     if not prefix:
         prefix = ''
-    manager = PluginManager(plugin_dir)
+    manager = PluginManager(resource=plugin_dir, search_path=extra_plugins)
     available_plugins = manager.plugins()
     for plugin in available_plugins:
         if plugin.startswith(prefix):
