@@ -79,5 +79,12 @@ def get_database(app_config):
     return dataset.connect(**db_info)
 
 
+def get_plugin_paths(resource):
+    app_config = get_config()
+    plugin_resources = app_config.get('extra_plugins', {})
+    extra_plugins = plugin_resources.get(resource, [])
+    return extra_plugins
+
+
 APP_CONFIG = get_config()
 DATABASE = get_database(APP_CONFIG)

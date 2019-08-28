@@ -2,6 +2,9 @@ import flask
 
 from .base_api import BaseAPI
 from .plugin_manager import get_plugin, get_plugins
+from .config import get_plugin_paths
+
+EXTRA_PLUGINS = get_plugin_paths('parsers')
 
 
 # pylint: disable=no-self-use
@@ -24,12 +27,12 @@ class ParserAPI(BaseAPI):
             response['warning'] = msg
             return flask.make_response(flask.jsonify(response), 422)
 
-        plugins = get_plugins(plugin_dir='parsers')
+        plugins = get_plugins(plugin_dir='parsers', extra_plugins=EXTRA_PLUGINS)
         for plugin in plugins:
             if plugin == 'common':
                 continue
 
-            manager = get_plugin('parsers', plugin)
+            manager = get_plugin(plugin_dir='parsers', plugin_name=plugin, extra_plugins=EXTRA_PLUGINS)
             parser = manager.EventParser(uuid=self.uuid)
             if parser.match(data=body):
                 parser.parse(body)
