@@ -42,6 +42,19 @@ Valid options for `URI` are sqlalchemy connection strings.
 
 The `$PORT` variable will be replaced with the temporary port when running tests.
 
+### Additional Plugins
+
+External plugins can be added via the `extra_plugins` key. The subkey is the name of the plugin resource.
+
+An example config would be as:
+```
+staging:
+  extra_plugins:
+    parsers:
+    - /path/to/plugin
+    - /ext/path/parser
+```
+
 ## Testing
 
 We are using `tox` to run through unit and style checks.
