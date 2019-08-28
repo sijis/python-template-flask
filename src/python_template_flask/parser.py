@@ -14,7 +14,7 @@ class ParserAPI(BaseAPI):
         response = {
             'received': flask.request.json,
             'warning': None,
-            'parsed': None,
+            'parsed': {},
         }
         body = response['received']
 
@@ -24,32 +24,16 @@ class ParserAPI(BaseAPI):
             response['warning'] = msg
             return flask.make_response(flask.jsonify(response), 422)
 
-        all_parsers = self._determine_parser(body)
+        plugins = get_plugins(plugin_dir='parsers')
+        for plugin in plugins:
+            if plugin == 'common':
+                continue
 
-        for parser in all_parsers:
-            plugin_found = False
-            try:
-                manager = get_plugin('parsers', parser)
-                plugin_found = True
-            except ModuleNotFoundError as error:
-                msg = 'Plugin {} not found.'.format(parser)
-                self.log.error(msg=msg, error=error)
-                response['warning'] = msg
-
-            if plugin_found:
-                parser = manager.EventParser(uuid=self.uuid)
+            manager = get_plugin('parsers', plugin)
+            parser = manager.EventParser(uuid=self.uuid)
+            if parser.match(data=body):
                 parser.parse(body)
                 parsed = parser.create()
-                response['parsed'] = parsed
+                response['parsed'][plugin] = parsed
 
         return flask.jsonify(**response)
-
-    def _determine_parser(self, body):
-        """Attempt to determine the correct parser."""
-        parser_prefix = 'mirror'
-
-        found_prefix = body.get('parser', None)
-        if found_prefix:
-            parser_prefix = found_prefix
-
-        return get_plugins('parsers', parser_prefix)
