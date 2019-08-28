@@ -23,6 +23,10 @@ class BasePlugin(ABC):
         """Implement the provider property."""
 
     @abstractmethod
+    def match(self, data):
+        """Implement the Resource match operation."""
+
+    @abstractmethod
     def parse(self, data):
         """Implement the Resource parse operation."""
 

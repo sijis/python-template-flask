@@ -9,6 +9,9 @@ class EventParser(BasePlugin):
     resource = 'parser'
     name = 'mirror'
 
+    def match(self, data):
+        return True
+
     def parse(self, data):
         self.log.info(data)
         self.data = data
