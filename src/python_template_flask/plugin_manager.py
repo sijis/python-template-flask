@@ -11,7 +11,6 @@ class PluginManager:
         resource (str): Path of plugin directory.
         name (str): The name of the plugin.
     """
-
     def __init__(self, resource, name):
         path = pathlib.Path(__file__).parent.resolve()
         path = path / resource
@@ -42,7 +41,15 @@ def get_plugin(plugin_dir, plugin_name):
     return plugin
 
 
-def get_plugins(plugin_dir, prefix):
+def get_plugins(plugin_dir, prefix=None):
+    """Get plugins starting with a prefix
+
+    Args:
+        plugin_dir (str): Path of plugin directory.
+        prefix (str): Plugin prefix to match.
+    """
+    if not prefix:
+        prefix = ''
     manager = PluginManager(plugin_dir, '')
     available_plugins = manager.plugins()
     for plugin in available_plugins:
